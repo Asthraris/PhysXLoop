@@ -57,13 +57,9 @@ Shader::Shader(const char* vertexpath,const char* fragpath)
 		std::ifstream F_file_stream(vertexpath);
 		if (!F_file_stream)throw "AMAN > frag File cant opened [maybe not exixt wrong path]\n";
 
-		//ek string ko stram karne layak container bana te hai
 		std::stringstream fragCache;
-		//fir us container me rdbuf ke Ascii conversion karke storekarte hai
 		fragCache << F_file_stream.rdbuf();
-		//fir woh opened file ko close kardete hai
 		F_file_stream.close();
-		//joh temp string container se hum copy karte hai to new std::string var (Usable)
 		std::string fragSource = fragCache.str();
 		const char* fragstr = fragSource.c_str();
 

@@ -7,8 +7,7 @@ uniform mat4 ViewMatrix;
 uniform mat4 ProjMatrix;
 
 void main(){
-
+	mat4 res = ProjMatrix* ViewMatrix* ModelMatrix;
 	
 	
-
 }
