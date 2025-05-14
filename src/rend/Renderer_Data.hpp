@@ -18,7 +18,7 @@ public:
     size_t getSizeofShapeIndices() const {
         return indices.size() * sizeof(unsigned int);
     }
-    static Mesh CUBE(float size = 1.0f) {
+    static Mesh createCUBE(float size = 1.0f) {
         Mesh mesh;
         float h = size * 0.5f;
 
@@ -41,7 +41,7 @@ public:
 
     
 
-    static Mesh SPHERE(int segments = 16, int rings = 16, float radius = 1.0f) {
+    static Mesh createSPHERE(int segments = 16, int rings = 16, float radius = 1.0f) {
         Mesh mesh;
 
         for (int y = 0; y <= rings; ++y) {
@@ -89,9 +89,9 @@ public:
     size_t INDICES_COUNT_SPHERE;
 
     MeshLibrary() {
-        Cube_shape_vertex = std::make_unique<Mesh>(Mesh::CUBE);
+        Cube_shape_vertex = std::make_unique<Mesh>(Mesh::createCUBE());
         INDICES_COUNT_CUBE = Cube_shape_vertex->indices.size();
-        Sphere_shape_vertex = std::make_unique<Mesh>(Mesh::SPHERE);
+        Sphere_shape_vertex = std::make_unique<Mesh>(Mesh::createSPHERE());
         INDICES_COUNT_SPHERE = Sphere_shape_vertex->indices.size();
 
     }
