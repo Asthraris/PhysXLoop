@@ -1,10 +1,11 @@
 #include "PhysicsBody.h"
 
-Body::Body(std::shared_ptr<Mesh> mesh, BoundingType type) :
+Body::Body( BoundingType type) :
 	Position(Eigen::Vector3f::Zero()),
 	Scale(Eigen::Vector3f::Ones()),
 	Rotation(Eigen::Vector4f(0.0f, 1.0f, 0.0f, 0.0f)),
-	Collider(type,mesh)
+	Collider(type),
+	Body_shape(type)
 {
 	//this way of initiatization is faster than Block init and aslo gets called over child creation
 	
@@ -55,8 +56,8 @@ float* Body::ConstructTransformMat()
 		
 }
 //====================================================================
-PhysicsBody::PhysicsBody(bool gravity_influnce, float mass ,std::shared_ptr<Mesh> mesh, BoundingType type, bool indes = false):
-	Body(mesh,type),
+PhysicsBody::PhysicsBody(bool gravity_influnce, float mass , BoundingType type, bool indes = false):
+	Body(type),
 	Influence_gravity(gravity_influnce),
 	Mass(mass),
 	Indestructible(indes),

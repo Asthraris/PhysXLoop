@@ -1,4 +1,5 @@
 #version 460 core
+layout(loaction =0)in vec3 vPos;
 
 
 uniform mat4 ModelMatrix;
@@ -7,7 +8,5 @@ uniform mat4 ViewMatrix;
 uniform mat4 ProjMatrix;
 
 void main(){
-	mat4 res = ProjMatrix* ViewMatrix* ModelMatrix;
-	
-	
+	mat4 res = ProjMatrix* ViewMatrix* ModelMatrix * vPos;	
 }

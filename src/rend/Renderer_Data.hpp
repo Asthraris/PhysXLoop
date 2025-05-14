@@ -1,14 +1,23 @@
 #include <vector>
 #include <memory>
 #include <Eigen/Dense>
+#include "ArcBall.hpp"
 
-constexpr double PI = 3.14159265358979323846;
+
+struct vec3 {
+    float x, y, z;
+};
 
 class Mesh {
 public:
-    std::vector<Eigen::Vector3f> vertices;
-    std::vector<uint32_t> indices;
-
+    std::vector<vec3> vertices;
+    std::vector<unsigned int> indices;
+    size_t getSizeofShapeVertex() const {
+        return vertices.size() * sizeof(vec3);
+    }
+    size_t getSizeofShapeIndices() const {
+        return indices.size() * sizeof(unsigned int);
+    }
     static Mesh CUBE(float size = 1.0f) {
         Mesh mesh;
         float h = size * 0.5f;
@@ -30,28 +39,7 @@ public:
         return mesh;
     }
 
-    static Mesh CUBOID(const float size[3]) {
-        Mesh mesh;
-        float hx = size[0] * 0.5f;
-        float hy = size[1] * 0.5f;
-        float hz = size[2] * 0.5f;
-
-        mesh.vertices = {
-            {-hx, -hy, -hz}, { hx, -hy, -hz}, { hx,  hy, -hz}, {-hx,  hy, -hz}, // back
-            {-hx, -hy,  hz}, { hx, -hy,  hz}, { hx,  hy,  hz}, {-hx,  hy,  hz}  // front
-        };
-
-        mesh.indices = {
-            0, 1, 2,  2, 3, 0,
-            4, 5, 6,  6, 7, 4,
-            4, 5, 1,  1, 0, 4,
-            7, 6, 2,  2, 3, 7,
-            4, 0, 3,  3, 7, 4,
-            5, 1, 2,  2, 6, 5
-        };
-
-        return mesh;
-    }
+    
 
     static Mesh SPHERE(int segments = 16, int rings = 16, float radius = 1.0f) {
         Mesh mesh;
@@ -95,15 +83,17 @@ public:
 
 class MeshLibrary{
 public:
-    std::shared_ptr<Mesh> Cube;
-    std::shared_ptr<Mesh> Sphere;
-    MeshLibrary() {
-        Cube = std::make_shared<Mesh>(Mesh::CUBE);
-        Sphere = std::make_shared<Mesh>(Mesh::SPHERE);
-    }
-    std::shared_ptr<Mesh> CreateCuboid(const float size[3]) {
-        std::shared_ptr<Mesh> cuboid = std::make_shared<Mesh>(Mesh::CUBOID(size));
-        return cuboid;
-    }
+    std::unique_ptr<Mesh> Cube_shape_vertex;
+    size_t INDICES_COUNT_CUBE;
+    std::unique_ptr<Mesh> Sphere_shape_vertex;
+    size_t INDICES_COUNT_SPHERE;
 
+    MeshLibrary() {
+        Cube_shape_vertex = std::make_unique<Mesh>(Mesh::CUBE);
+        INDICES_COUNT_CUBE = Cube_shape_vertex->indices.size();
+        Sphere_shape_vertex = std::make_unique<Mesh>(Mesh::SPHERE);
+        INDICES_COUNT_SPHERE = Sphere_shape_vertex->indices.size();
+
+    }
+    
 };

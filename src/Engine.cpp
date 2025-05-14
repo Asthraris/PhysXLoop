@@ -1,11 +1,13 @@
 #include "Engine.hpp"
 
-Engine::Engine():MAIN_SCENE()
+Engine::Engine():Entities(std::make_shared<std::vector<Body>>())
 {
 }
 
 void Engine::Start()
 {
+    Body box(CUBE);
+    Entities->push_back(box);
 }
 
 Engine::~Engine()
@@ -14,10 +16,12 @@ Engine::~Engine()
 
 void Engine::UpdateLoop(const float deltaTime)
 {
-
+    
 }
 
-std::shared_ptr<Scene> Engine::giveAccess2Scene() const
+auto Engine::getEntitiesPtr() const
 {
-    return MAIN_SCENE;
+    return Entities;
 }
+
+

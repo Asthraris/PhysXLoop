@@ -3,7 +3,6 @@
 #include <Eigen/geometry>
 #include <memory>
 //for poointing the vertex data
-#include "rend/Renderer_Data.hpp"
 
 enum BoundingType {CUBE ,CUBOID, SPHERE ,CAPSULE};
 
@@ -12,8 +11,7 @@ struct BoundingBox {
 
 	BoundingType type;
 	Eigen::Vector3f size = Eigen::Vector3f::Ones();
-	std::shared_ptr<Mesh> mesh;
-	BoundingBox(BoundingType& ty, std::shared_ptr<Mesh> sh) :type(ty),mesh(sh){}
+	BoundingBox(BoundingType& ty) :type(ty){}
 	//for cube size.x
 	//for boid size.xyz
 	//for shpre size.x -> radius
@@ -31,8 +29,9 @@ protected:
 	BoundingBox Collider;
 
 public:
+	BoundingType Body_shape;
 	//in C++ the constructor of Parent is called when we create an Child Object
-	Body(std::shared_ptr<Mesh> mesh, BoundingType type);//required so we know whats the bb type
+	Body( BoundingType type);//required so we know whats the bb type
 	~Body();
 
 	void setPosition(const Eigen::Vector3f);
@@ -62,7 +61,7 @@ protected:
 
 public:
 	//In C++, if a parent class (Base) requires arguments in its constructor, the child class (Derived) must explicitly call that constructor using an initializer list.
-	PhysicsBody(bool, float, std::shared_ptr<Mesh>, BoundingType, bool);
+	PhysicsBody(bool, float, BoundingType, bool);
 	~PhysicsBody();
 
 	void Update(float deltaTime, const float gravity);//abhi ke liye gravity only y axis me hogi

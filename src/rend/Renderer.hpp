@@ -7,9 +7,8 @@
 #include"../Utils.hpp"
 #include"Shader.hpp"
 #include"ArcBall.hpp"
-#include"../Scene.hpp"
-
-
+#include"Renderer_Data.hpp"
+#include"../PhysicsBody.h"
 
 
 class Renderer
@@ -17,11 +16,18 @@ class Renderer
 	GLFWwindow* window;
 	std::unique_ptr<Shader> e_shader;
 	std::unique_ptr<ArcBall> e_cam;
-	std::shared_ptr<Scene> e_scene;
+	MeshLibrary* library;
+	std::shared_ptr<std::vector<Body>> Entities;
+
+	// trans_ssbo_id;
+	unsigned int CUBE_SHAPE_VAO, CUBE_VBO, CUBE_EBO;
+	unsigned int SPHERE_SHAPE_VAO, SPHERE_VBO, SPHERE_EBO;
+
+
 	float deltaTime;
 	
 public:
-	Renderer(std::shared_ptr<Scene>);
+	Renderer(std::shared_ptr<std::vector<Body>> Ent);
 	~Renderer();
 	void run(std::function<void(float)> engineUpdate);//lambda func take float and return void
 };
