@@ -1,18 +1,16 @@
 #include <vector>
 #include <memory>
 #include "ArcBall.hpp"
+#include "../Utils.hpp"
 
 
-struct vec3 {
-    float x, y, z;
-};
 
 class Mesh {
 public:
-    std::vector<vec3> vertices;
+    std::vector<myVec3> vertices;
     std::vector<unsigned int> indices;
     size_t getSizeofShapeVertex() const {
-        return vertices.size() * sizeof(vec3);
+        return vertices.size() * sizeof(myVec3);
     }
     size_t getSizeofShapeIndices() const {
         return indices.size() * sizeof(unsigned int);
@@ -92,7 +90,6 @@ public:
         INDICES_COUNT_CUBE = Cube_shape_vertex->indices.size();
         Sphere_shape_vertex = std::make_unique<Mesh>(Mesh::createSPHERE());
         INDICES_COUNT_SPHERE = Sphere_shape_vertex->indices.size();
-
     }
     
 };

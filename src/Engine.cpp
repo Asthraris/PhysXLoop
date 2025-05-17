@@ -19,7 +19,7 @@ void Engine::UpdateLoop(const float deltaTime)
     
 }
 
-auto Engine::getEntitiesPtr() const
+std::shared_ptr<std::vector<Body>> Engine::getEntitiesPtr() const
 {
     return Entities;
 }

@@ -1,6 +1,10 @@
 #include "Renderer.hpp"
 #include <Eigen/dense>
 
+
+//debug
+#include <iostream>
+
 #define WIN_X 1080
 #define WIN_Y 720
 #define INITIAL_TRANFORM_SSBO_SIZE 10
@@ -15,7 +19,7 @@ float Timer() {
 	lastTime = currtime;
 	return dt;
 }
-Renderer::Renderer(std::shared_ptr<std::vector<Body>> Ent):Entities(Ent), library()
+Renderer::Renderer(std::shared_ptr<std::vector<Body>> Ent):Entities(Ent)
 {
 	//init glfw
 	glfwInit();
@@ -30,6 +34,8 @@ Renderer::Renderer(std::shared_ptr<std::vector<Body>> Ent):Entities(Ent), librar
 	glClearColor(bg.r, bg.g, bg.b, bg.a);
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, WIN_X, WIN_Y);
+
+	*library = MeshLibrary();
 }
 
 Renderer::~Renderer()
@@ -40,40 +46,35 @@ Renderer::~Renderer()
 
 void Renderer::run(std::function<void(float)> engineUpdate)
 {
-	e_shader = std::make_unique<Shader>("src/rend/shaders/basic.vert", "src/rend/shaders/basic.frag");
+	e_shader = std::make_unique<Shader>("src/rend/shaders/basic.vert","src/rend/shaders/basic.frag");
 	e_shader->Activate();
 
-	/*  IDHAR MUJHE JAB ENHANCE KARNA HOGA TAB ME WHEN I GET PERFORMNACE BOTTLENECK MAI MODEL MATRIX  MAKE SSBO
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &trans_ssbo_id);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, trans_ssbo_id);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, INITIAL_TRANFORM_SSBO_SIZE * FLOATS_PER_MATRIX4 * sizeof(float), e_scene->get);
-	*/
+
 	glGenVertexArrays(1, &CUBE_SHAPE_VAO);
-	glGenBuffers(GL_VERTEX_ARRAY, &CUBE_VBO);
-	glBindBuffer(GL_VERTEX_ARRAY, CUBE_VBO);
-	glBufferData(GL_VERTEX_ARRAY, library->Cube_shape_vertex->getSizeofShapeVertex(), library->Cube_shape_vertex->vertices.data(), GL_STATIC_DRAW);
+	glGenBuffers(1, &CUBE_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, CUBE_VBO);
+	glBufferData(GL_ARRAY_BUFFER, library->Cube_shape_vertex->getSizeofShapeVertex(), library->Cube_shape_vertex->vertices.data(), GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), nullptr);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(myVec3), nullptr);
 	glGenBuffers(GL_ELEMENT_ARRAY_BUFFER, &CUBE_EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, CUBE_EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, library->Cube_shape_vertex->getSizeofShapeIndices(), library->Cube_shape_vertex->indices.data(), GL_STATIC_DRAW);
 
 
 	glGenVertexArrays(1, &SPHERE_SHAPE_VAO);
-	glGenBuffers(GL_VERTEX_ARRAY, &SPHERE_VBO);
-	glBindBuffer(GL_VERTEX_ARRAY, SPHERE_VBO);
-	glBufferData(GL_VERTEX_ARRAY, library->Sphere_shape_vertex->getSizeofShapeVertex(), library->Sphere_shape_vertex->vertices.data(), GL_STATIC_DRAW);
+	glGenBuffers(1, &SPHERE_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, SPHERE_VBO);
+	glBufferData(GL_ARRAY_BUFFER, library->Sphere_shape_vertex->getSizeofShapeVertex(), library->Sphere_shape_vertex->vertices.data(), GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), nullptr);
-	glGenBuffers(GL_ELEMENT_ARRAY_BUFFER, &SPHERE_EBO);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(myVec3), nullptr);
+	glGenBuffers(1, &SPHERE_EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, SPHERE_EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, library->Sphere_shape_vertex->getSizeofShapeIndices(), library->Sphere_shape_vertex->indices.data(), GL_STATIC_DRAW);
 
 
-	e_cam = std::make_unique<ArcBall>(45, 0.1f, 10.f, (float)WIN_X / (float)WIN_Y);
+	e_cam = std::make_unique<ArcBall>(45, 0.1f, 10.f, ((float)WIN_X / (float)WIN_Y));
 	while (!glfwWindowShouldClose(window)) 
 	{
 		deltaTime = Timer();

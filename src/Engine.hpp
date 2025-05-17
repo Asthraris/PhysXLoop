@@ -12,6 +12,6 @@ public:
 	void Start();
 	~Engine();
 	void UpdateLoop(const float deltaTime);
-	auto getEntitiesPtr()const;
+	std::shared_ptr<std::vector<Body>> getEntitiesPtr()const;
 };
 

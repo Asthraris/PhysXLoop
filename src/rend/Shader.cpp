@@ -4,37 +4,23 @@
 #include <sstream>
 
 #include <iostream>
-bool Shader::checkErrors(const unsigned int vertex_id, const unsigned int fragment_id)
+bool Shader::checkErrors(const unsigned int shader_id)
 {
 	{
 		int result;
-		glGetShaderiv(vertex_id, GL_COMPILE_STATUS, &result);
+		glGetShaderiv(shader_id, GL_COMPILE_STATUS, &result);
 		if (result == GL_FALSE) {
 			int length;
-			glGetShaderiv(vertex_id, GL_INFO_LOG_LENGTH, &length);
+			glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &length);
 			char* error = (char*)malloc(length * sizeof(char));
-			glGetShaderInfoLog(vertex_id, length, &length, error);
-			std::cout << "Vertex-ERROR >" << error << "\n";
+			glGetShaderInfoLog(shader_id, length, &length, error);
+			std::cout << "GLSL-ERROR >" << error << "\n";
 			return true;
 		}
-		
 	}
-	{
-		int result;
-		glGetShaderiv(fragment_id, GL_COMPILE_STATUS, &result);
-		if (result == GL_FALSE) {
-			int length;
-			glGetShaderiv(fragment_id, GL_INFO_LOG_LENGTH, &length);
-			char* error = (char*)malloc(length * sizeof(char));
-			glGetShaderInfoLog(fragment_id, length, &length, error);
-			std::cout << "Fragment-ERROR >" << error << "\n";
-			return true;
-
-		}
-		return false;
-	}
+	return false;
 }
-Shader::Shader(const char* vertexpath,const char* fragpath)
+Shader::Shader(const std::string vertexpath, const std::string fragpath)
 {
 	try {
 		unsigned int vert_id, frag_id;
@@ -54,7 +40,7 @@ Shader::Shader(const char* vertexpath,const char* fragpath)
 
 
 
-		std::ifstream F_file_stream(vertexpath);
+		std::ifstream F_file_stream(fragpath);
 		if (!F_file_stream)throw "AMAN > frag File cant opened [maybe not exixt wrong path]\n";
 
 		std::stringstream fragCache;
@@ -71,7 +57,9 @@ Shader::Shader(const char* vertexpath,const char* fragpath)
 		glShaderSource(frag_id, 1, &fragstr, nullptr);
 		glCompileShader(frag_id);
 
-		if (checkErrors(vert_id, frag_id))throw "AMAN > Shader not Compiled Successfully !\n";
+		if (checkErrors(vert_id))throw "AMAN > VERTEX-Shader not Compiled Successfully !\n";
+		if (checkErrors(frag_id))throw "AMAN > FRAGMENT-Shader not Compiled Successfully !\n";
+
 
 		m_prog_id = glCreateProgram();
 		glAttachShader(m_prog_id, vert_id);
@@ -99,7 +87,7 @@ Shader::Shader(const char* vertexpath,const char* fragpath)
 
 
 		glUseProgram(0);
-
+		std::cout << "[DEBUG]=> Shader Loaded !\n";
 	}
 	catch (const char* Error) {
 		std::cout << Error;
