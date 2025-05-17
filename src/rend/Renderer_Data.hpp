@@ -1,6 +1,5 @@
 #include <vector>
 #include <memory>
-#include <Eigen/Dense>
 #include "ArcBall.hpp"
 
 
@@ -46,7 +45,7 @@ public:
 
         for (int y = 0; y <= rings; ++y) {
             float v = float(y) / rings;
-            float phi = v * PI;
+            float phi = float(v * PI);
 
             for (int x = 0; x <= segments; ++x) {
                 float u = float(x) / segments;
