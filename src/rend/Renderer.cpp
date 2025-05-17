@@ -35,7 +35,7 @@ Renderer::Renderer(std::shared_ptr<std::vector<Body>> Ent):Entities(Ent)
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, WIN_X, WIN_Y);
 
-	*library = MeshLibrary();
+	library = new MeshLibrary();
 }
 
 Renderer::~Renderer()
@@ -50,19 +50,25 @@ void Renderer::run(std::function<void(float)> engineUpdate)
 	e_shader->Activate();
 
 
+	if (library->Cube_shape_vertex == nullptr)exit(2);
+	if (library->Sphere_shape_vertex == nullptr)exit(2);
+
 	glGenVertexArrays(1, &CUBE_SHAPE_VAO);
+	glBindVertexArray(CUBE_SHAPE_VAO);
 	glGenBuffers(1, &CUBE_VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, CUBE_VBO);
 	glBufferData(GL_ARRAY_BUFFER, library->Cube_shape_vertex->getSizeofShapeVertex(), library->Cube_shape_vertex->vertices.data(), GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(myVec3), nullptr);
-	glGenBuffers(GL_ELEMENT_ARRAY_BUFFER, &CUBE_EBO);
+	glGenBuffers(1, &CUBE_EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, CUBE_EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, library->Cube_shape_vertex->getSizeofShapeIndices(), library->Cube_shape_vertex->indices.data(), GL_STATIC_DRAW);
 
+	glBindVertexArray(0);
 
 	glGenVertexArrays(1, &SPHERE_SHAPE_VAO);
+	glBindVertexArray(SPHERE_SHAPE_VAO);
 	glGenBuffers(1, &SPHERE_VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, SPHERE_VBO);
 	glBufferData(GL_ARRAY_BUFFER, library->Sphere_shape_vertex->getSizeofShapeVertex(), library->Sphere_shape_vertex->vertices.data(), GL_STATIC_DRAW);
@@ -73,6 +79,7 @@ void Renderer::run(std::function<void(float)> engineUpdate)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, SPHERE_EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, library->Sphere_shape_vertex->getSizeofShapeIndices(), library->Sphere_shape_vertex->indices.data(), GL_STATIC_DRAW);
 
+	glBindVertexArray(0);
 
 	e_cam = std::make_unique<ArcBall>(45, 0.1f, 10.f, ((float)WIN_X / (float)WIN_Y));
 	while (!glfwWindowShouldClose(window)) 
