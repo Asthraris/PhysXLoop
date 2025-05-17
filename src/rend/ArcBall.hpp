@@ -113,7 +113,7 @@ constexpr float degToRad(float deg) {
 		}
 
 	public:
-		ArcBall(){}//default
+		ArcBall() = default;
 		ArcBall(float fov, float near, float far, float aspect) :
 			POSITION_VECTOR(Eigen::Vector3f::Zero()),
 			TARGET_VECTOR(Eigen::Vector3f::Zero()),

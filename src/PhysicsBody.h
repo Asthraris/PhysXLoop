@@ -45,9 +45,10 @@ public:
 
 
 	float* ConstructTransformMat();
+	virtual void Update(float deltaTime, const float gravity){}
 };
 //for body which is Collidable
-class PhysicsBody : Body 
+class PhysicsBody :public Body 
 {
 protected:
 	float Mass;
@@ -61,10 +62,10 @@ protected:
 
 public:
 	//In C++, if a parent class (Base) requires arguments in its constructor, the child class (Derived) must explicitly call that constructor using an initializer list.
-	PhysicsBody(bool, float, BoundingType, bool);
+	PhysicsBody(bool gravity_influnce, float mass, BoundingType type, bool indetruct );
 	~PhysicsBody();
 
-	void Update(float deltaTime, const float gravity);//abhi ke liye gravity only y axis me hogi
+	void Update(float deltaTime, const float gravity) override;//abhi ke liye gravity only y axis me hogi
 	void ApplyForce(const Eigen::Vector3f);
 	void ApplyForceAtPoint(const Eigen::Vector3f, const Eigen::Vector3f);
 

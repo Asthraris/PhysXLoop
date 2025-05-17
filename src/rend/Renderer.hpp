@@ -17,7 +17,7 @@ class Renderer
 	std::unique_ptr<Shader> e_shader;
 	std::unique_ptr<ArcBall> e_cam;
 	MeshLibrary* library;
-	std::shared_ptr<std::vector<Body>> Entities;
+	std::shared_ptr<std::vector<std::unique_ptr<Body>>> Entities;
 
 	// trans_ssbo_id;
 	unsigned int CUBE_SHAPE_VAO, CUBE_VBO, CUBE_EBO;
@@ -25,9 +25,10 @@ class Renderer
 
 
 	float deltaTime;
+	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	
 public:
-	Renderer(std::shared_ptr<std::vector<Body>> Ent);
+	Renderer(std::shared_ptr<std::vector<std::unique_ptr<Body>>> Ent);
 	~Renderer();
 	void run(std::function<void(float)> engineUpdate);//lambda func take float and return void
 };

@@ -5,10 +5,9 @@
 //debug
 #include <iostream>
 
-#define WIN_X 1080
-#define WIN_Y 720
-#define INITIAL_TRANFORM_SSBO_SIZE 10
-#define FLOATS_PER_MATRIX4 16
+constexpr int WIN_SIZE[2] = { 1080,720 };
+constexpr int INITIAL_TRANFORM_SSBO_SIZE = 10, FLOATS_PER_MATRIX4 = 16;
+
 
 Color bg = { 0.8f,0.8f,0.8f,1.0f };
 
@@ -19,7 +18,17 @@ float Timer() {
 	lastTime = currtime;
 	return dt;
 }
-Renderer::Renderer(std::shared_ptr<std::vector<Body>> Ent):Entities(Ent)
+
+void Renderer::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	Renderer* renderer = static_cast<Renderer*>(glfwGetWindowUserPointer(window));
+	if (renderer && renderer->e_cam) {
+		renderer->e_cam->setScrollDelta(static_cast<float>(yoffset));
+	}
+}
+
+
+Renderer::Renderer(std::shared_ptr<std::vector<std::unique_ptr<Body>>> Ent):Entities(Ent)
 {
 	//init glfw
 	glfwInit();
@@ -27,13 +36,19 @@ Renderer::Renderer(std::shared_ptr<std::vector<Body>> Ent):Entities(Ent)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);//core since i m pro ;}
 	//create win and set it as primary space to use gl
-	window = glfwCreateWindow(WIN_X, WIN_Y, "PISICS Engine", nullptr, nullptr);
+	window = glfwCreateWindow(WIN_SIZE[0], WIN_SIZE[1], "PISICS Engine", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 	//load gl functions 
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	glClearColor(bg.r, bg.g, bg.b, bg.a);
 	glEnable(GL_DEPTH_TEST);
-	glViewport(0, 0, WIN_X, WIN_Y);
+	glViewport(0, 0, WIN_SIZE[0], WIN_SIZE[1]);
+
+
+	//this func gives access to renderer class to glfw
+	glfwSetWindowUserPointer(window, this);
+
+
 
 	library = new MeshLibrary();
 }
@@ -46,6 +61,8 @@ Renderer::~Renderer()
 
 void Renderer::run(std::function<void(float)> engineUpdate)
 {
+	glfwSetScrollCallback(window,Renderer::scroll_callback);
+
 	e_shader = std::make_unique<Shader>("src/rend/shaders/basic.vert","src/rend/shaders/basic.frag");
 	e_shader->Activate();
 
@@ -81,7 +98,7 @@ void Renderer::run(std::function<void(float)> engineUpdate)
 
 	glBindVertexArray(0);
 
-	e_cam = std::make_unique<ArcBall>(45, 0.1f, 10.f, ((float)WIN_X / (float)WIN_Y));
+	e_cam = std::make_unique<ArcBall>(45, 0.1f, 10.f, ((float)WIN_SIZE[0] / (float)WIN_SIZE[1]));
 	while (!glfwWindowShouldClose(window)) 
 	{
 		deltaTime = Timer();
@@ -94,9 +111,9 @@ void Renderer::run(std::function<void(float)> engineUpdate)
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		for (Body entity : *Entities) {
-			e_shader->upload2GPU(MODEL, entity.ConstructTransformMat());
-			if (entity.Body_shape == CUBE) {
+		for (auto& entity : *Entities) {
+			e_shader->upload2GPU(MODEL, entity->ConstructTransformMat());
+			if (entity->Body_shape == CUBE) {
 				glBindVertexArray(CUBE_SHAPE_VAO);
 				glDrawElements(GL_TRIANGLES, library->INDICES_COUNT_CUBE, GL_UNSIGNED_INT, nullptr);
 			}
@@ -104,8 +121,6 @@ void Renderer::run(std::function<void(float)> engineUpdate)
 				glBindVertexArray(SPHERE_SHAPE_VAO);
 				glDrawElements(GL_TRIANGLES, library->INDICES_COUNT_SPHERE, GL_UNSIGNED_INT, nullptr);
 			}
-
-			//drawcall
 		}
 		
 

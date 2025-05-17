@@ -6,12 +6,13 @@
 class Engine
 {
 private:
-	std::shared_ptr<std::vector<Body>> Entities;
+	std::shared_ptr<std::vector<std::unique_ptr<Body>>> Entities;
+	float gravity;
 public:
 	Engine();
 	void Start();
 	~Engine();
 	void UpdateLoop(const float deltaTime);
-	std::shared_ptr<std::vector<Body>> getEntitiesPtr()const;
+	std::shared_ptr<std::vector<std::unique_ptr<Body>>> getEntitiesPtr()const;
 };
 

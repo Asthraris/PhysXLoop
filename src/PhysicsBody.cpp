@@ -1,5 +1,9 @@
 #include "PhysicsBody.h"
 
+
+
+#include <iostream>
+
 Body::Body( BoundingType type) :
 	Position(Eigen::Vector3f::Zero()),
 	Scale(Eigen::Vector3f::Ones()),
@@ -56,11 +60,11 @@ float* Body::ConstructTransformMat()
 		
 }
 //====================================================================
-PhysicsBody::PhysicsBody(bool gravity_influnce, float mass , BoundingType type, bool indes = false):
+PhysicsBody::PhysicsBody(bool gravity_influnce, float mass , BoundingType type, bool indetruct = true):
 	Body(type),
 	Influence_gravity(gravity_influnce),
 	Mass(mass),
-	Indestructible(indes),
+	Indestructible(indetruct),
 	Force_accumulator(Eigen::Vector3f::Zero()),
 	Torque_accumulator(Eigen::Vector3f::Zero())
 {
@@ -71,8 +75,10 @@ PhysicsBody::~PhysicsBody()
 {
 }
 
-void PhysicsBody::Update(const float deltaTime,const float gravity)
-{
+void PhysicsBody::Update(const float deltaTime,const float gravity) {
+
+	std::cout << "ENTITY update\n";
+
 	if (!Indestructible) {
 		if (Influence_gravity) 
 			Force_accumulator += Mass * Eigen::Vector3f( 0.0f, gravity, 0.0f) * deltaTime;
