@@ -98,16 +98,18 @@ void Renderer::run(std::function<void(float)> engineUpdate)
 
 	glBindVertexArray(0);
 
-	e_cam = std::make_unique<ArcBall>(45, 0.1f, 10.f, ((float)WIN_SIZE[0] / (float)WIN_SIZE[1]));
+	e_cam = std::make_unique<ArcBall>(45, 0.1f, 100.f, ((float)WIN_SIZE[0] / (float)WIN_SIZE[1]));
 	while (!glfwWindowShouldClose(window)) 
 	{
 		deltaTime = Timer();
+
+		engineUpdate(deltaTime); 
+
 		e_cam->Update(window);
 		e_shader->upload2GPU(VIEW, e_cam->renderView());
 		e_shader->upload2GPU(PERS, e_cam->getProjMatrix());
 
 
-		engineUpdate(deltaTime); 
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

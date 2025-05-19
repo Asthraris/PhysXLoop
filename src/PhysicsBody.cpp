@@ -2,7 +2,7 @@
 
 
 
-#include <iostream>
+//#include <iostream>
 
 Body::Body( BoundingType type) :
 	Position(Eigen::Vector3f::Zero()),
@@ -46,6 +46,25 @@ void Body::setScaleOnly(const Eigen::Vector3f sca)
 
 }
 
+Eigen::Vector3f Body::getScale() const
+{
+	return Scale;
+}
+
+AxisBox Body::getAABBbox() const
+{
+	//yaha par memory clear na ho udhar error aa sakta hai
+	Eigen::Vector3f halfScale = Scale * 0.5f;
+	Eigen::Vector3f p1 = Position - halfScale;
+	Eigen::Vector3f p2 = Position + halfScale;
+
+	Eigen::Vector3f min = p1.cwiseMin(p2);
+	Eigen::Vector3f max = p1.cwiseMax(p2);
+
+	return AxisBox{ max, min };
+
+}
+
 float* Body::ConstructTransformMat()
 {
 	//"Affine" just means it supports linear transformations plus translation (like a mat4 in OpenGL).
@@ -60,11 +79,12 @@ float* Body::ConstructTransformMat()
 		
 }
 //====================================================================
-PhysicsBody::PhysicsBody(bool gravity_influnce, float mass , BoundingType type, bool indetruct = true):
+PhysicsBody::PhysicsBody(bool gravity_influnce, float mass , BoundingType type):
 	Body(type),
 	Influence_gravity(gravity_influnce),
 	Mass(mass),
-	Indestructible(indetruct),
+	Velocity(Eigen::Vector3f::Zero()),
+	Angular_velocity(Eigen::Vector3f::Zero()),
 	Force_accumulator(Eigen::Vector3f::Zero()),
 	Torque_accumulator(Eigen::Vector3f::Zero())
 {
@@ -75,20 +95,18 @@ PhysicsBody::~PhysicsBody()
 {
 }
 
-void PhysicsBody::Update(const float deltaTime,const float gravity) {
-
-	std::cout << "ENTITY update\n";
-
-	if (!Indestructible) {
-		if (Influence_gravity) 
-			Force_accumulator += Mass * Eigen::Vector3f( 0.0f, gravity, 0.0f) * deltaTime;
-		//linear
-		Velocity += Force_accumulator/Mass * deltaTime;
-		//Angular
-		//Angular_velocity += Torque_accumulator/ * deltaTime;
-		Force_accumulator.setZero();
-		Torque_accumulator.setZero();
+void PhysicsBody::Update(const float deltaTime,const float gravity) 
+{
+	if (Influence_gravity) {
+		Force_accumulator += Mass * Eigen::Vector3f( 0.0f, gravity, 0.0f) ;
 	}
+	//linear
+	Velocity += Force_accumulator/Mass * deltaTime;
+	//Angular
+	//Angular_velocity += Torque_accumulator/ * deltaTime;
+	Force_accumulator.setZero();
+	Torque_accumulator.setZero();
+	
 
 	Position += Velocity * deltaTime;
 	//update rotation also acc to ang_velo

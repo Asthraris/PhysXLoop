@@ -6,6 +6,9 @@
 
 enum BoundingType {CUBE ,CUBOID, SPHERE ,CAPSULE};
 
+struct AxisBox {
+	Eigen::Vector3f vMax , vMin;
+};
 
 struct BoundingBox {
 
@@ -42,7 +45,9 @@ public:
 	void setScale(const Eigen::Vector3f);
 	//only Updates Entity Scale
 	void setScaleOnly(const Eigen::Vector3f);
+	Eigen::Vector3f getScale()const;
 
+	AxisBox getAABBbox()const;
 
 	float* ConstructTransformMat();
 	virtual void Update(float deltaTime, const float gravity){}
@@ -58,11 +63,11 @@ protected:
 	Eigen::Vector3f Angular_velocity;
 	Eigen::Vector3f Torque_accumulator;
 	bool Influence_gravity;
-	bool Indestructible;
+	//bool Indestructible;  ye mene moving object which will just exerts force not experience itself
 
 public:
 	//In C++, if a parent class (Base) requires arguments in its constructor, the child class (Derived) must explicitly call that constructor using an initializer list.
-	PhysicsBody(bool gravity_influnce, float mass, BoundingType type, bool indetruct );
+	PhysicsBody(bool gravity_influnce, float mass, BoundingType type);
 	~PhysicsBody();
 
 	void Update(float deltaTime, const float gravity) override;//abhi ke liye gravity only y axis me hogi

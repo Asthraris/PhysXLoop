@@ -6,8 +6,9 @@
 class Engine
 {
 private:
+	bool checkAABB(const AxisBox& box1, const AxisBox& box2);
 	std::shared_ptr<std::vector<std::unique_ptr<Body>>> Entities;
-	float gravity;
+	float gravity = -9.8f;
 public:
 	Engine();
 	void Start();
