@@ -37,8 +37,8 @@ public:
 	Body( BoundingType type);//required so we know whats the bb type
 	~Body();
 
-	void setPosition(const Eigen::Vector3f);
-	void Translate(const Eigen::Vector3f);
+	void setPosition(const Eigen::Vector3f&);
+	void Translate(const Eigen::Vector3f&);
 	Eigen::Vector3f getPosition()const;
 
 	//syncs with Collider also
@@ -51,7 +51,7 @@ public:
 	float* ConstructTransformMat();
 	virtual void Update(float deltaTime, const float gravity){}
 	virtual Eigen::Vector3f getVelocity()const { return Eigen::Vector3f::Zero(); }//yaha mene null vector send kiya keep that in mind
-	virtual float getMass()const { return 0.0f; }
+	virtual float getInverseMass()const { return 0.0f; }
 	virtual void ApplyImpulse(const Eigen::Vector3f, const float deltaTime){}
 };
 //for body which is Collidable
@@ -74,7 +74,7 @@ public:
 
 	void Update(float deltaTime, const float gravity) override;//abhi ke liye gravity only y axis me hogi
 	void ApplyImpulse(const Eigen::Vector3f, const float deltaTime) override;
-	float getMass()const override { return Mass; };
+	float getInverseMass()const override { return 1/Mass; };
 
 	Eigen::Vector3f getVelocity()const override{ return Velocity; }
 	void ApplyForceAtPoint(const Eigen::Vector3f, const Eigen::Vector3f);

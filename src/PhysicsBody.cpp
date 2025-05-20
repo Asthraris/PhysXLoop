@@ -19,12 +19,12 @@ Body::~Body()
 {
 }
 
-void Body::setPosition(const Eigen::Vector3f pos)
+void Body::setPosition(const Eigen::Vector3f& pos)
 {
 	Position = pos;
 }
 
-void Body::Translate(const Eigen::Vector3f change)
+void Body::Translate(const Eigen::Vector3f& change)
 {
 	Position += change;
 }
