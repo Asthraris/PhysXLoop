@@ -17,7 +17,7 @@ public:
     }
     static Mesh createCUBE(float size = 1.0f) {
         Mesh mesh;
-        float h = size * 0.5f;
+        float h = (size * 0.5f) ;
 
         mesh.vertices = {
             {-h, -h, -h}, { h, -h, -h}, { h,  h, -h}, {-h,  h, -h}, // back
@@ -40,7 +40,6 @@ public:
 
     static Mesh createSPHERE(int segments = 16, int rings = 16, float radius = 1.0f) {
         Mesh mesh;
-
         for (int y = 0; y <= rings; ++y) {
             float v = float(y) / rings;
             float phi = float(v * PI);

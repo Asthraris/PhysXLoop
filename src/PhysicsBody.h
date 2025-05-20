@@ -13,7 +13,7 @@ struct AxisBox {
 struct BoundingBox {
 
 	BoundingType type;
-	Eigen::Vector3f size = Eigen::Vector3f::Ones();
+	//Eigen::Vector3f size = Eigen::Vector3f::Ones()/OBJECT_SIZE_REDUCER;
 	BoundingBox(BoundingType& ty) :type(ty){}
 	//for cube size.x
 	//for boid size.xyz
@@ -27,8 +27,8 @@ class Body
 protected:
 	Eigen::Matrix4f Transform;
 	Eigen::Vector3f Position;
-	Eigen::Vector4f Rotation;
 	Eigen::Vector3f Scale;
+	Eigen::Vector4f Rotation;
 	BoundingBox Collider;
 
 public:
@@ -44,13 +44,15 @@ public:
 	//syncs with Collider also
 	void setScale(const Eigen::Vector3f);
 	//only Updates Entity Scale
-	void setScaleOnly(const Eigen::Vector3f);
 	Eigen::Vector3f getScale()const;
 
 	AxisBox getAABBbox()const;
 
 	float* ConstructTransformMat();
 	virtual void Update(float deltaTime, const float gravity){}
+	virtual Eigen::Vector3f getVelocity()const { return Eigen::Vector3f::Zero(); }//yaha mene null vector send kiya keep that in mind
+	virtual float getMass()const { return 0.0f; }
+	virtual void ApplyImpulse(const Eigen::Vector3f, const float deltaTime){}
 };
 //for body which is Collidable
 class PhysicsBody :public Body 
@@ -71,7 +73,10 @@ public:
 	~PhysicsBody();
 
 	void Update(float deltaTime, const float gravity) override;//abhi ke liye gravity only y axis me hogi
-	void ApplyForce(const Eigen::Vector3f);
+	void ApplyImpulse(const Eigen::Vector3f, const float deltaTime) override;
+	float getMass()const override { return Mass; };
+
+	Eigen::Vector3f getVelocity()const override{ return Velocity; }
 	void ApplyForceAtPoint(const Eigen::Vector3f, const Eigen::Vector3f);
 
 };

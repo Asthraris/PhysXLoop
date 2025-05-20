@@ -36,15 +36,9 @@ Eigen::Vector3f Body::getPosition() const
 
 void Body::setScale(const Eigen::Vector3f sca)
 {
-	Collider.size = sca;
 	Scale = sca;
 }
 
-void Body::setScaleOnly(const Eigen::Vector3f sca)
-{
-	Scale = sca;
-
-}
 
 Eigen::Vector3f Body::getScale() const
 {
@@ -113,9 +107,9 @@ void PhysicsBody::Update(const float deltaTime,const float gravity)
 
 }
 
-void PhysicsBody::ApplyForce(const Eigen::Vector3f new_force)
+void PhysicsBody::ApplyImpulse(const Eigen::Vector3f velocity_rev ,const float deltaTime)
 {
-	Force_accumulator += new_force;
+	Force_accumulator += (velocity_rev * Mass) / deltaTime;
 }
 
 void PhysicsBody::ApplyForceAtPoint(const Eigen::Vector3f new_force, const Eigen::Vector3f point)
