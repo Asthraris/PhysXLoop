@@ -11,6 +11,13 @@
 #include"../PhysicsBody.h"
 
 
+struct Playbar {
+	bool Simulate;
+	bool Move;
+	//int listof demo avail
+};
+
+
 class Renderer
 {
 	GLFWwindow* window;
@@ -25,11 +32,19 @@ class Renderer
 
 
 	float deltaTime;
+	Playbar playbar;
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+	void imGuiInit();
+	void imGuiDraw();
+	void imGuiRender();
+
+	void setupBuffers();
 	
 public:
 	Renderer(std::shared_ptr<std::vector<std::unique_ptr<Body>>> Ent);
 	~Renderer();
-	void run(std::function<void(float)> engineUpdate);//lambda func take float and return void
+	void run(std::function<void(float)> engineUpdate , std::function <void()>engineUi);//lambda func take float and return void
 };
 

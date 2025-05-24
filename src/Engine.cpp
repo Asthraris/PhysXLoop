@@ -1,5 +1,5 @@
 #include "Engine.hpp"
-
+#include <imGui/imgui.h>
 #include <iostream>
 
 bool Engine::detectAABB(const AxisBox& box1,const AxisBox& box2 )
@@ -75,8 +75,8 @@ void Engine::Start()
 {
     Entities->emplace_back(std::make_unique<Body>(CUBE));
     //Entities->emplace_back(std::make_unique<Body>(SPHERE));
-    Entities->emplace_back(std::make_unique<PhysicsBody>(false, 1.0, SPHERE));
-    Entities->emplace_back(std::make_unique<PhysicsBody>(true, 1.0, SPHERE));
+    Entities->emplace_back(std::make_unique<PhysicsBody>(false, 1.0, CUBE));
+    Entities->emplace_back(std::make_unique<PhysicsBody>(true, 1.0, CUBE));
     (*Entities)[0]->setPosition(Eigen::Vector3f(0.0f, -2.0f, 0.0f));
 
     (*Entities)[2]->setPosition(Eigen::Vector3f(0.0f, 10.0f, 0.0f));
@@ -107,6 +107,15 @@ void Engine::UpdateLoop(const float deltaTime)
     for (auto& entity : *Entities) {
         entity->Update(deltaTime, gravity);
     }
+}
+
+void Engine::imGuiDraw_eng()
+{
+    ImGui::Begin("UI");
+    ImGui::Checkbox("Collision",&ui.Collision);
+    ImGui::SameLine();
+    ImGui::Checkbox("Gravity", &ui.Gravity);
+    ImGui::End();
 }
 
 std::shared_ptr<std::vector<std::unique_ptr<Body>>> Engine::getEntitiesPtr() const
