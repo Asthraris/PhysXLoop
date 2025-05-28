@@ -15,6 +15,8 @@ private:
 	Engine_Ui ui;
 private:
 	bool detectAABB(const AxisBox& box1, const AxisBox& box2);
+	bool detectABSphere(float rad1, const AxisBox& box2, const Eigen::Vector3f& Sphere_ent_pos );
+	bool detect2Spheres(float rad1,float rad2 , const Eigen::Vector3f& centerDiff);
 	void CollisionResolution(std::unique_ptr<Body>& ent_A, std::unique_ptr<Body>& ent_B,const Eigen::Vector3f& Collision_normal, const float deltaTime);
 	void PenetrationResolution(std::unique_ptr<Body>& ent_A, std::unique_ptr<Body>& ent_B, const Eigen::Vector3f& Collision_normal);
 public:

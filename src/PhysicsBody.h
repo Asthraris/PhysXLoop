@@ -4,23 +4,13 @@
 #include <memory>
 //for poointing the vertex data
 
-enum BoundingType {CUBE ,CUBOID, SPHERE ,CAPSULE};
+enum BoundingType {CUBE , SPHERE,CUBOID ,CAPSULE};
 
 struct AxisBox {
 	Eigen::Vector3f vMax , vMin;
 };
 
-struct BoundingBox {
-
-	BoundingType type;
-	//Eigen::Vector3f size = Eigen::Vector3f::Ones()/OBJECT_SIZE_REDUCER;
-	BoundingBox(BoundingType& ty) :type(ty){}
-	//for cube size.x
-	//for boid size.xyz
-	//for shpre size.x -> radius
-	//for Capsule size.xy
-
-};
+//MERE ENGINE ME ACTUAL SHAPE SE HI COLLISON DETECT HOGA NOT ARTIFICAL SHAPE [ UNTILL I CHANGE MY MIND]
 //for non Collidable body
 class Body
 {
@@ -29,10 +19,10 @@ protected:
 	Eigen::Vector3f Position;
 	Eigen::Vector3f Scale;
 	Eigen::Vector4f Rotation;
-	BoundingBox Collider;
+	//for cuboid ,capcule , sphere
 
 public:
-	BoundingType Body_shape;
+	BoundingType Collider;
 	//in C++ the constructor of Parent is called when we create an Child Object
 	Body( BoundingType type);//required so we know whats the bb type
 	~Body();
@@ -45,6 +35,17 @@ public:
 	void setScale(const Eigen::Vector3f);
 	//only Updates Entity Scale
 	Eigen::Vector3f getScale()const;
+	//for accessing the data in collision detect for specially cuboid ,capsule,sphere and for renderer raw data
+	float getScale_X()const {
+		return Scale.x();
+	}
+	float getScale_Y()const {
+		return Scale.y();
+	}
+	float getScale_Z()const {
+		return Scale.z();
+	}
+
 
 	AxisBox getAABBbox()const;
 

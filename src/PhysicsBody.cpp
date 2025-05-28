@@ -8,8 +8,7 @@ Body::Body( BoundingType type) :
 	Position(Eigen::Vector3f::Zero()),
 	Scale(Eigen::Vector3f::Ones()),
 	Rotation(Eigen::Vector4f(0.0f, 1.0f, 0.0f, 0.0f)),
-	Collider(type),
-	Body_shape(type)
+	Collider(type)
 {
 	//this way of initiatization is faster than Block init and aslo gets called over child creation
 	

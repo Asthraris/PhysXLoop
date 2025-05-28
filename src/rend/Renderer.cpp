@@ -203,7 +203,7 @@ void Renderer::run(std::function<void(float)> engineUpdate, std::function <void(
 		imGuiRender();
 		for (auto& entity : *Entities) {
 			e_shader->upload2GPU(MODEL, entity->ConstructTransformMat());
-			if (entity->Body_shape == CUBE) {
+			if (entity->Collider == CUBE) {
 				glBindVertexArray(CUBE_SHAPE_VAO);
 				glDrawElements(GL_TRIANGLES, library->INDICES_COUNT_CUBE, GL_UNSIGNED_INT, nullptr);
 			}
