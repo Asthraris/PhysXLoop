@@ -9,11 +9,10 @@
 //debug
 #include <iostream>
 
-constexpr int WIN_SIZE[2] = { 1080,720 };
+constexpr int WIN_SIZE[2] = { 1920,1080 };
 constexpr int INITIAL_TRANFORM_SSBO_SIZE = 10, FLOATS_PER_MATRIX4 = 16;
 
 
-Color bg = { 0.8f,0.8f,0.0f,1.0f };
 
 float Timer() {
 	static double lastTime = 0.0;
@@ -138,7 +137,6 @@ Renderer::Renderer(std::shared_ptr<std::vector<std::unique_ptr<Body>>> Ent):Enti
 	glfwMakeContextCurrent(window);
 	//load gl functions 
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-	glClearColor(bg.r, bg.g, bg.b, bg.a);
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, WIN_SIZE[0], WIN_SIZE[1]);
 

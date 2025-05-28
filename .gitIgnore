@@ -1,3 +1,9 @@
 Newton
 x64
 Newton.*
+dep/inc/glad/*
+dep/inc/GLFW/*
+dep/inc/KHR/*
+dep/lib/*
+ext/Eigen/*
+ext/imGui/*
