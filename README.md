@@ -1,4 +1,4 @@
-# 🧪 PhysXLoop – C++ Physics Engine on OpenGL 4.6
+# 🧪 PhysXine – C++ Physics Engine on OpenGL 4.6
 
 **PhysXLoop** is a physics-first simulation engine built from scratch in modern C++ using **OpenGL 4.6** for rendering and **Eigen** for mathematical precision. It’s designed for accurate, real-time physical interaction — with core focus on robust **collision detection/resolution**, a **modular entity model**, and an **event-controlled runtime** that enables seamless switching between simulation and camera control.
 
